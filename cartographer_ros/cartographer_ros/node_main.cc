@@ -43,7 +43,11 @@ DEFINE_bool(
 DEFINE_string(
     save_state_filename, "",
     "If non-empty, serialize state and write it to disk before shutting down.");
-
+namespace cartographer{
+namespace mapping{
+extern int savepcdflag;
+}
+}
 namespace cartographer_ros {
 namespace {
 
@@ -56,6 +60,7 @@ void Run() {
   std::tie(node_options, trajectory_options) =
       LoadOptions(FLAGS_configuration_directory, FLAGS_configuration_basename);
 
+  cartographer::mapping::savepcdflag=1;
   auto map_builder =
       cartographer::mapping::CreateMapBuilder(node_options.map_builder_options);
   Node node(node_options, std::move(map_builder), &tf_buffer,
@@ -85,9 +90,9 @@ void Run() {
 int main(int argc, char** argv) {
   google::InitGoogleLogging(argv[0]);
   google::ParseCommandLineFlags(&argc, &argv, true);
-
+  std::cout<<"hello\n";
   CHECK(!FLAGS_configuration_directory.empty())
-      << "-configuration_directory is missing.";
+      << "-configuration_directory is missing. hello";
   CHECK(!FLAGS_configuration_basename.empty())
       << "-configuration_basename is missing.";
 

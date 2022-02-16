@@ -137,6 +137,12 @@ std::unique_ptr<carto::sensor::ImuData> SensorBridge::ToImuData(
       << "The IMU frame must be colocated with the tracking frame. "
          "Transforming linear acceleration into the tracking frame will "
          "otherwise be imprecise.";
+  auto rt0=sensor_to_tracking->rotation();
+ // std::cout << "rotation quat " <<rt0.x() << ", " << rt0.y() << "," << rt0.z() << "," << tf0.w() <<"; " <<"; " <<ToEigen(msg->linear_acceleration) << std::endl;
+ // Eigen::Matrix3d R = rt0.normalized().toRotationMatrix();
+ // std::cout << "R=" << std::endl << R << std::endl;
+
+//std::cout<<"sensor to tracking jwang "<< sensor_to_tracking->rotation() * ToEigen(msg->linear_acceleration);
   return absl::make_unique<carto::sensor::ImuData>(carto::sensor::ImuData{
       time, sensor_to_tracking->rotation() * ToEigen(msg->linear_acceleration),
       sensor_to_tracking->rotation() * ToEigen(msg->angular_velocity)});

@@ -43,6 +43,21 @@ std::unique_ptr<::cartographer::io::SubmapTextures> FetchSubmapTextures(
   for (const auto& texture : srv.response.textures) {
     const std::string compressed_cells(texture.cells.begin(),
                                        texture.cells.end());
+
+    /* jwang debug to dump submap to screen, in rviz launch file set output=screen */
+    /*
+    ::cartographer::io::SubmapTexture::Pixels pixels = ::cartographer::io::UnpackTextureData(compressed_cells, texture.width,
+                                              texture.height);
+    std::cout << "carto rviz submap cell: reso/w/h: "<<texture.resolution <<" " <<texture.width <<" " <<texture.height<<"\n";
+    std::cout<<"\nalpha:\n";
+    for (const char & pixel_alp : pixels.alpha) {
+	    std::cout<<int(pixel_alp)<<" ";
+    }
+    std::cout<<"\nintensity:\n";
+    for (const char & pixel_int : pixels.intensity) {
+	    std::cout<<int(pixel_int)<<" ";
+    }
+    */
     response->textures.emplace_back(::cartographer::io::SubmapTexture{
         ::cartographer::io::UnpackTextureData(compressed_cells, texture.width,
                                               texture.height),

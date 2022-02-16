@@ -36,7 +36,7 @@ google_initialize_cartographer_project()
 find_package(absl REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(catkin REQUIRED COMPONENTS ${PACKAGE_DEPENDENCIES})
-
+find_package(PCL 1.5 REQUIRED)
 catkin_package(
   CATKIN_DEPENDS
     message_runtime
@@ -76,6 +76,10 @@ target_link_libraries(${PROJECT_NAME} PUBLIC ${EIGEN3_LIBRARIES})
 target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC
   "${Boost_INCLUDE_DIRS}")
 target_link_libraries(${PROJECT_NAME} PUBLIC ${Boost_LIBRARIES})
+
+target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC
+  "${PCL_INCLUDE_DIRS}")
+target_link_libraries(${PROJECT_NAME} PUBLIC ${PCL_LIBRARIES})
 
 target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${catkin_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} PUBLIC ${catkin_LIBRARIES})
