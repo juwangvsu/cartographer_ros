@@ -19,7 +19,7 @@
 #include "absl/memory/memory.h"
 #include "cartographer_ros/msg_conversion.h"
 #include "cartographer_ros/time_conversion.h"
-
+#include <typeinfo>
 namespace cartographer_ros {
 
 namespace carto = ::cartographer;
@@ -151,7 +151,10 @@ std::unique_ptr<carto::sensor::ImuData> SensorBridge::ToImuData(
 void SensorBridge::HandleImuMessage(const std::string& sensor_id,
                                     const sensor_msgs::Imu::ConstPtr& msg) {
   std::unique_ptr<carto::sensor::ImuData> imu_data = ToImuData(msg);
+  const std::type_info& type_info = typeid(*trajectory_builder_);
+  //std::cout<<"SensorBridge::HandleImuMessage trajectory_builder_: "<< type_info.name()<<"\n";
   if (imu_data != nullptr) {
+  //std::cout<<"SensorBridge::HandleImuMessage\n";
     trajectory_builder_->AddSensorData(
         sensor_id,
         carto::sensor::ImuData{imu_data->time, imu_data->linear_acceleration,
@@ -237,6 +240,8 @@ void SensorBridge::HandleRangefinder(
   }
   const auto sensor_to_tracking =
       tf_bridge_.LookupToTracking(time, CheckNoLeadingSlash(frame_id));
+  const std::type_info& type_info = typeid(*trajectory_builder_);
+  std::cout<<"SensorBridge::HandleRangefinder trajectory_builder_: "<< type_info.name()<<"\n";
   if (sensor_to_tracking != nullptr) {
     trajectory_builder_->AddSensorData(
         sensor_id, carto::sensor::TimedPointCloudData{

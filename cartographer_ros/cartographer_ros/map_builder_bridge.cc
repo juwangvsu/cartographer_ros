@@ -122,6 +122,7 @@ int MapBuilderBridge::AddTrajectory(
     const std::set<cartographer::mapping::TrajectoryBuilderInterface::SensorId>&
         expected_sensor_ids,
     const TrajectoryOptions& trajectory_options) {
+	std::cout<<"MapBuilderBridge::AddTrajectory\n";
   const int trajectory_id = map_builder_->AddTrajectoryBuilder(
       expected_sensor_ids, trajectory_options.trajectory_builder_options,
       [this](const int trajectory_id, const ::cartographer::common::Time time,

@@ -221,6 +221,8 @@ void Node::AddSensorSamplers(const int trajectory_id,
 
 void Node::PublishLocalTrajectoryData(const ::ros::TimerEvent& timer_event) {
   absl::MutexLock lock(&mutex_);
+  auto localtrajdata = map_builder_bridge_.GetLocalTrajectoryData();
+  //std::cout<<"Node::PublishLocalTrajectoryData localtrajdata.size "<< localtrajdata.size()<<"\n";
   for (const auto& entry : map_builder_bridge_.GetLocalTrajectoryData()) {
     const auto& trajectory_data = entry.second;
 
@@ -284,6 +286,9 @@ void Node::PublishLocalTrajectoryData(const ::ros::TimerEvent& timer_event) {
 
     const Rigid3d tracking_to_map =
         trajectory_data.local_to_map * tracking_to_local;
+
+    //trajectory_data.local_slam_data->time 
+    std::cout<<"local_pose, local_to_map,  tracking_to_local  " << trajectory_data.local_slam_data->local_pose.translation()[0]<<" "<<trajectory_data.local_slam_data->local_pose.translation()[1]<<" "<<trajectory_data.local_slam_data->local_pose.translation()[2] << ", " << trajectory_data.local_to_map.translation()[0]<<" " << trajectory_data.local_to_map.translation()[1]<<" "<<trajectory_data.local_to_map.translation()[2] << ", " <<  tracking_to_local.translation()[0]<<" "<<tracking_to_local.translation()[1]<<" "<<tracking_to_local.translation()[2] <<"\n";
 
     if (trajectory_data.published_to_tracking != nullptr) {
       if (node_options_.publish_to_tf) {
@@ -608,6 +613,8 @@ bool Node::HandleStartTrajectory(
     response.status.code = cartographer_ros_msgs::StatusCode::INVALID_ARGUMENT;
   } else {
     response.status.message = "Success.";
+
+  std::cout<<"Node::HandleStartTrajectory AddTrajectory\n";
     response.trajectory_id = AddTrajectory(trajectory_options);
     response.status.code = cartographer_ros_msgs::StatusCode::OK;
   }
@@ -617,6 +624,7 @@ bool Node::HandleStartTrajectory(
 void Node::StartTrajectoryWithDefaultTopics(const TrajectoryOptions& options) {
   absl::MutexLock lock(&mutex_);
   CHECK(ValidateTrajectoryOptions(options));
+  std::cout<<"Node::StartTrajectoryWithDefaultTopics AddTrajectory\n";
   AddTrajectory(options);
 }
 
